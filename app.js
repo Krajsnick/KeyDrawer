@@ -36,6 +36,7 @@ io.listen(server).on('connection', function(socket) {
   console.log("Connection via socketio");
 
   socket.on('paint', function(data){
-    console.log("Someone paints");
+    console.log("Coordinates rec. at: " + data.x + " - " + data.y);    
   });
+
 });
