@@ -5,18 +5,30 @@ $(document).ready(function(){
       down = 40,
       penX = 400,
       penY = 300,
-      speed = 1;
+      speed = 1,
+      $userlist = $('#userlist');
 
   var socket = io.connect('http://localhost:3000');
+
+  socket.on('new-connection', function(data) {
+    updateUserCount(data.userCount)
+    console.log(data.userCount);
+  });
+
+  socket.on('user-disconnect', function(data) {
+    updateUserCount(data.userCount)
+    console.log(data.userCount);
+  });
 
   var canvas = document.getElementById('canvas');
   if (canvas.getContext) {
     var ctx = canvas.getContext('2d');
-    ctx.strokeStyle = 'rgb(255, 0, 0)';
     ctx.moveTo(penX, penY);
     speed = 3;
 
     window.onkeydown = function(e){
+      ctx.strokeStyle = 'rgb(255, 0, 0)';
+
       switch (e.keyCode) {
       case left:
         penX -= speed;
@@ -37,12 +49,17 @@ $(document).ready(function(){
       socket.emit('paint', {x: penX, y: penY});
       ctx.lineTo(penX, penY);
       ctx.stroke();
-
-      socket.on('update-canvas', function(data) {
-        ctx.lineTo(data.x, data.y);
-        ctx.stroke();
-      });
     }
+
+    socket.on('update-canvas', function(data) {
+      ctx.strokeStyle = 'rgb(0, 0, 255)';
+      ctx.lineTo(data.x, data.y);
+      ctx.stroke();
+    });
+  }
+
+  function updateUserCount(count) {
+    $('#user-count').html("Connected: " + count);
   }
 
 });

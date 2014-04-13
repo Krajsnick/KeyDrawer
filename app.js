@@ -1,6 +1,6 @@
 var fs = require('fs')
 , http = require('http')
-, io = require('socket.io');
+, socketio = require('socket.io');
 
 var server = http.createServer(function (req, res) {
   console.log("Request for: " + req.url);
@@ -32,8 +32,19 @@ var server = http.createServer(function (req, res) {
 });
 
 
-io.listen(server).on('connection', function(socket) {
+var io = socketio.listen(server);
+var clients = 0;
+
+io.sockets.on('connection', function(socket) {
+  io.sockets.emit('new-connection', {userCount: ++clients});
+});
+
+io.on('connection', function(socket) {
   console.log("Connection via socketio");
+
+  socket.on('disconnect', function() {
+    socket.broadcast.emit('user-disconnect', {userCount: --clients});
+  });
 
   socket.on('paint', function(data){
     console.log("Coordinates rec. at: " + data.x + " - " + data.y);
