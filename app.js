@@ -30,3 +30,12 @@ var server = http.createServer(function (req, res) {
 }).listen(3000, function(){
   console.log("Server running at 3000");
 });
+
+
+io.listen(server).on('connection', function(socket) {
+  console.log("Connection via socketio");
+
+  socket.on('paint', function(data){
+    console.log("Someone paints");
+  });
+});
