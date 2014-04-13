@@ -8,7 +8,7 @@ $(document).ready(function(){
       speed = 1,
       $userlist = $('#userlist');
 
-  var socket = io.connect('http://localhost:3000');
+  var socket = io.connect(window.location.origin);
 
   socket.on('new-connection', function(data) {
     updateUserCount(data.userCount)
