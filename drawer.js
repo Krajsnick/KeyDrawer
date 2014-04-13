@@ -12,7 +12,7 @@ $(document).ready(function(){
   var canvas = document.getElementById('canvas');
   if (canvas.getContext) {
     var ctx = canvas.getContext('2d');
-    ctx.setStrokeColor(255, 0, 0, 1);
+    ctx.strokeStyle = 'rgb(255, 0, 0)';
     ctx.moveTo(penX, penY);
     speed = 3;
 
