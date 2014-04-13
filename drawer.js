@@ -37,6 +37,11 @@ $(document).ready(function(){
       socket.emit('paint', {x: penX, y: penY});
       ctx.lineTo(penX, penY);
       ctx.stroke();
+
+      socket.on('update-canvas', function(data) {
+        ctx.lineTo(data.x, data.y);
+        ctx.stroke();
+      });
     }
   }
 
