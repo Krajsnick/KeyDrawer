@@ -29,6 +29,8 @@ $(document).ready(function(){
     window.onkeydown = function(e){
       ctx.strokeStyle = 'rgb(255, 0, 0)';
 
+      var startX = penX, startY = penY;
+
       switch (e.keyCode) {
       case left:
         penX -= speed;
@@ -46,14 +48,16 @@ $(document).ready(function(){
         return;
       }
 
-      socket.emit('paint', {x: penX, y: penY});
+      socket.emit('paint', {x: penX, y: penY, startX: startX, startY: startY});
       ctx.lineTo(penX, penY);
       ctx.stroke();
     }
 
     socket.on('update-canvas', function(data) {
       ctx.strokeStyle = 'rgb(0, 0, 255)';
+      ctx.moveTo(data.startX, data.startY);
       ctx.lineTo(data.x, data.y);
+      ctx.moveTo(penX, penY);
       ctx.stroke();
     });
   }
